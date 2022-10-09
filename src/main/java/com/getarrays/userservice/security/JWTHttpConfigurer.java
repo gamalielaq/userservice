@@ -5,15 +5,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.stereotype.Component;
 
-import com.getarrays.userservice.filter.JwtAuthorizationFilter;
+import com.getarrays.userservice.filter.JwtAuthenticationFilter;
 
 @Component
 public class JWTHttpConfigurer  extends AbstractHttpConfigurer<JWTHttpConfigurer, HttpSecurity> {
     
     @Override
-    public void configure(HttpSecurity http)  throws Exception{
+    public void configure(HttpSecurity http)  throws Exception {
         AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
-        http.addFilter(new JwtAuthorizationFilter(authenticationManager));
+        JwtAuthenticationFilter jwtAuthorizationFilter = new JwtAuthenticationFilter(authenticationManager);
+        jwtAuthorizationFilter.setFilterProcessesUrl("/api/login");
+        http.addFilter(jwtAuthorizationFilter);
     }
 
     public static JWTHttpConfigurer jWTHttpConfigurer() {
