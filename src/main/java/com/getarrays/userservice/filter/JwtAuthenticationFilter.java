@@ -74,5 +74,4 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             
     }
-
 }
