@@ -21,9 +21,9 @@ public class JwtAuhenticatoinEntryPoint extends Http403ForbiddenEntryPoint {
 
     @Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {	
-
+        // HttpStatus.FORBIDDEN
         HttpResponse httpResponse = new HttpResponse(
-            HttpStatus.FORBIDDEN.value(),  HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.getReasonPhrase().toUpperCase(), SecurityConstant.FORBIDDEN_MESSAGE
+            HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase().toUpperCase(), SecurityConstant.FORBIDDEN_MESSAGE
         );
         
         response.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);

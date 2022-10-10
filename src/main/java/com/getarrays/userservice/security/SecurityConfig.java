@@ -12,8 +12,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.getarrays.userservice.filter.JwtAuhenticatoinEntryPoint;
+import com.getarrays.userservice.filter.JwtAuthorizationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -34,12 +36,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();// seguridad por defecto desabilitada
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/api/login/**").permitAll(); //publica
+        http.authorizeRequests().antMatchers("/api/login/**", "/api/token/refresh/**").permitAll(); //publica
         http.authorizeRequests().antMatchers("/api/user/**").hasAnyAuthority("ROLE_USER");
         http.authorizeRequests().antMatchers("/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().anyRequest().authenticated(); // usuario que este autenticado
         http.exceptionHandling().authenticationEntryPoint(this.jwtAuhenticatoinEntryPoint);
         http.apply(new JWTHttpConfigurer());
+        http.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     } 
 }
